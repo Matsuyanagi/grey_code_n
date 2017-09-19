@@ -7,10 +7,6 @@
 #	2017-09-20
 #-----------------------------------------------------------------------------
 require 'pp'
-require 'fileutils'
-require 'date'
-require 'time'
-require 'strscan'
 
 Encoding.default_external="utf-8"
 =begin
