@@ -65,9 +65,9 @@ end
 def main( settings )
 	
 	# 進数
-	n_decimal = 3
+	n_decimal = 5
 	# 桁数
-	keta_max = 4
+	keta_max = 5
 	
 	# 数字配列
 	#	デフォルトで [ 0, 1, 2, 3, ... ] だが、どんな順番でもいい
@@ -102,7 +102,7 @@ def main( settings )
 		end
 		
 		# 各桁の配列を文字列化する [0] が最下位なので文字列としては反転する
-		puts each_keta.to_keta_str
+		puts %Q!#{sprintf( "%#{keta_max}d", current_number )} : #{current_number.to_s(n_decimal).rjust(keta_max) } : #{each_keta.to_keta_str}!
 		
 	end
 	
