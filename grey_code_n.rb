@@ -15,16 +15,17 @@ Encoding.default_external="utf-8"
 		
 		「0 1 2 3 4 」の連番でなくてもよくて、5つの順列であればなんでもいい「0 2 4 1 3」とかでも
 		
-		1桁目は「0 1 2 3 4」「4 0 1 2 3」「3 4 0 1 2」「2 3 4 0 1」「1 2 3 4 0」
-		
+		0 1 2 3 4 
+			↓
+			1桁目は「0 1 2 3 4」「4 0 1 2 3」「3 4 0 1 2」「2 3 4 0 1」「1 2 3 4 0」
+			上の桁に 「0 1 2 3 4」をつける
+			↓
 		0 1 2 3 4  4 0 1 2 3  3 4 0 1 2  2 3 4 0 1  1 2 3 4 0
 		0 0 0 0 0  1 1 1 1 1  2 2 2 2 2  3 3 3 3 3  4 4 4 4 4
-		
-		↓
+			↓
 			2桁目が 「0 1 2 3 4」「4 0 1 2 3」「3 4 0 1 2」「2 3 4 0 1」「1 2 3 4 0」となるように並べ替えて、
-			一番上に 「0 1 2 3 4」をつける
-		↓
-		
+			上の桁に 「0 1 2 3 4」をつける
+			↓
 		0 1 2 3 4  4 0 1 2 3  3 4 0 1 2  2 3 4 0 1  1 2 3 4 0	0 1 2 3 4  4 0 1 2 3  3 4 0 1 2  2 3 4 0 1  1 2 3 4 0	0 1 2 3 4  4 0 1 2 3  3 4 0 1 2  2 3 4 0 1  1 2 3 4 0	0 1 2 3 4  4 0 1 2 3  3 4 0 1 2  2 3 4 0 1  1 2 3 4 0	0 1 2 3 4  4 0 1 2 3  3 4 0 1 2  2 3 4 0 1  1 2 3 4 0
 		0 0 0 0 0  1 1 1 1 1  2 2 2 2 2  3 3 3 3 3  4 4 4 4 4	4 4 4 4 4  0 0 0 0 0  1 1 1 1 1  2 2 2 2 2  3 3 3 3 3	3 3 3 3 3  4 4 4 4 4  0 0 0 0 0  1 1 1 1 1  2 2 2 2 2	2 2 2 2 2  3 3 3 3 3  4 4 4 4 4  0 0 0 0 0  1 1 1 1 1	1 1 1 1 1  2 2 2 2 2  3 3 3 3 3  4 4 4 4 4  0 0 0 0 0
 		0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0	1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1  1 1 1 1 1	2 2 2 2 2  2 2 2 2 2  2 2 2 2 2  2 2 2 2 2  2 2 2 2 2	3 3 3 3 3  3 3 3 3 3  3 3 3 3 3  3 3 3 3 3  3 3 3 3 3	4 4 4 4 4  4 4 4 4 4  4 4 4 4 4  4 4 4 4 4  4 4 4 4 4
@@ -63,24 +64,26 @@ def main( settings )
 	# 進数
 	n_decimal = 5
 	# 桁数
-	keta_max = 5
+	keta_max = 4
 	
 	# 数字配列
 	#	デフォルトで [ 0, 1, 2, 3, ... ] だが、どんな順番でもいい
 	n_decimal_number_array = [ *( 0 ... n_decimal ) ]
 	
-#	pp n_decimal_number_array
+	# shuffle してもいい 
+	# n_decimal_number_array.shuffle!
+	# pp n_decimal_number_array
 	
 	
 	# すべての数 : 0 ... (N進数)^(桁数)
 	( 0 ... n_decimal ** keta_max ).each do |current_number|
 		
-		# 各桁 [ 0 ] が最下位桁
+		# 各桁の数値を保持する。 [ 0 ] が最下位桁
 		each_keta = Array.new( keta_max )
 	
 		keta_max.times do |keta|	# keta : 0 ... 桁数
 			
-			# 桁毎に 現在の数値を N**keta でシフトする 
+			# 桁毎に 現在の数値を N**keta で位取りをシフトする : "1234" → "123"
 			c = current_number / ( n_decimal ** keta )
 			
 			# index = c ( % n_decimal )
@@ -97,8 +100,11 @@ def main( settings )
 			
 		end
 		
+		# 表示用の10進数の桁数
+		decimal_keta_num = ( Math.log( n_decimal ** keta_max ) / Math.log( 10 ) ).ceil
+		
 		# 各桁の配列を文字列化する [0] が最下位なので文字列としては反転する
-		puts %Q!#{sprintf( "%#{keta_max}d", current_number )} : #{current_number.to_s(n_decimal).rjust(keta_max) } : #{each_keta.to_keta_str}!
+		puts %Q!#{sprintf( "%#{decimal_keta_num}d", current_number )} : #{current_number.to_s(n_decimal).rjust(keta_max) } : #{each_keta.to_keta_str(n_decimal)}!
 		
 	end
 	
